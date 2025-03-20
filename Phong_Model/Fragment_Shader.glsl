@@ -1,7 +1,6 @@
 //FRAGMENT SHADER
 #version 460
 in vec3 light_intensity;
-in vec3 back_light_intensity;
 in vec2 tex_coord;
 
 out vec4 FragColor; //define the output of the fragment shader
@@ -24,10 +23,5 @@ void main(){
 	//vec4 intensity = vec4(1.0, 1.0, 1.0, 1.0);
 	//vec4 intensity = vec4(light_intensity, 1.0);
 	//FragColor = vec4(ambient_light_intensity, 1.0) * vec4(light_intensity, 1.0) * vec4(object_color.xyz, 1.0);
-	if(gl_FrontFacing){
-		FragColor = vec4(light_intensity, 1.0) * vec4(object_color, 1.0);
-	}
-	else{
-		FragColor = vec4(back_light_intensity, 1.0);
-	}
+	FragColor = vec4(light_intensity, 1.0) * vec4(object_color, 1.0);
 }

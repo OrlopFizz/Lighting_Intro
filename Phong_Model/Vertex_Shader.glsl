@@ -7,7 +7,6 @@ layout(location = 2) in vec2 aTexCoord;
 //output variables
 out vec2 tex_coord;
 out vec3 light_intensity;
-out vec3 back_light_intensity;
 
 //light uniform struct
 
@@ -67,5 +66,4 @@ void main(){
 	getCamSpace(camNorm, camPosition);
 	
 	light_intensity = phongmodel(camPosition, camNorm);
-	back_light_intensity = phongmodel(camPosition, -camNorm);
 }

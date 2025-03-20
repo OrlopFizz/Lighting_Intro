@@ -292,7 +292,7 @@ int main() {
 			change_imgui = false;
 		}
 
-		local_to_world = glm::translate(local_to_world, glm::vec3(0.0f, 0.0f, 0.0f));
+		local_to_world = glm::translate(local_to_world, glm::vec3(0.0f, -1.0f, 0.0f));
 		view_space = glm::lookAt(camera_origin, camera_target, glm::vec3(0.0f, 1.0f, 0.0f));
 		projection_space = glm::perspective(glm::radians(45.0f), (float)(win_width / win_height), 0.1f, 100.0f);
 
