@@ -1,13 +1,11 @@
 #define _USE_MATH_DEFINES
-#include<glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "Shader_Program.h"
-#include <glm.hpp>
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
+#include "glm.hpp"
 #include "Model.h"
 #include "imgui_wrapper.h"
-#include <math.h>
+#include "math.h"
 
 #include <iostream>
 #include <map>
