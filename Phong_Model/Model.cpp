@@ -90,9 +90,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		vert.normal_coords.x = mesh->mNormals[i].x;
 		vert.normal_coords.y = mesh->mNormals[i].y;
 		vert.normal_coords.z = mesh->mNormals[i].z;
-		//vert.normal_coords.x = 0.0f;
-		//vert.normal_coords.y = 0.0f;
-		//vert.normal_coords.z = 0.0f;
 
 		float dist = distance_between_points(vert.position_coords, glm::vec3(5.0f, 5.0f, 2.0f));
 		if (dist < min_dist) {

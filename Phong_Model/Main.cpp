@@ -12,6 +12,8 @@
 #include <iostream>
 #include <map>
 #include <typeinfo>
+#include <fstream>
+#include <sstream>
 
 const char* getTypeString(GLenum type) {
 	// There are many more types than are covered here, but
@@ -109,6 +111,52 @@ void process_input(GLFWwindow* window, int key, int scancode, int action, int mo
 	}
 }
 
+//double current_mouse_posx = 0.0f;
+//double current_mouse_posy = 0.0f;
+double last_mouse_posx = 0.0f;
+double last_mouse_posy = 0.0f;
+std::map<const char*, bool> mouse_mov_status = { {"up", false}, {"down", false}, {"left", false}, {"right", false}};
+void process_mouse_movement(GLFWwindow* window, double xpos, double ypos) {
+	/*
+	//if diff_x is positive, current position is higher than last position, moving to the right.
+	//if its negative, last_mouse_posx is higher, we are moving to the left
+	double diff_x = xpos - last_mouse_posx;
+	if (diff_x < 0) { //negative
+		mouse_mov_status["right"] = false;
+		mouse_mov_status["left"] = true;
+	}
+	else if (diff_x > 0) { //positive
+		mouse_mov_status["right"] = true;
+		mouse_mov_status["left"] = false;
+	}
+
+	//if diff_y is positive, it means current position is higher than the last position, we are moving down.
+	//if its negative, last_mouse_posy is higher, we are moving up.
+	double diff_y = ypos - last_mouse_posy;
+	if (diff_x < 0) { //negative
+		mouse_mov_status["up"] = true;
+		mouse_mov_status["down"] = false;
+	}
+	else if (diff_y > 0) { //positive
+		mouse_mov_status["up"] = false;
+		mouse_mov_status["down"] = true;
+	}
+	std::cout << diff_x << " " << diff_y << '\n';
+	last_mouse_posx = xpos;
+	last_mouse_posy = ypos;
+	*/
+
+	std::cout << xpos << " " << ypos << '\n';
+
+}
+
+std::string read_file(std::string path) {
+	std::ifstream file(path);
+	std::stringstream content_stream;
+	content_stream << file.rdbuf();
+	return content_stream.str();
+}
+
 int main() {
 	float move_vel = 0.01f; //movement velocity
 
@@ -135,9 +183,10 @@ int main() {
 		return -1;
 	}
 
-	//starting imgui
-
 	glfwSetKeyCallback(window, process_input);
+
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, process_mouse_movement);
 
 	int max_uniforms;
 	glGetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &max_uniforms);
@@ -178,7 +227,8 @@ int main() {
 	glm::vec3 camera_origin = glm::vec3(0.0f, 0.0f, 10.0f);
 	//camera direction, vector from the camera target to the camera, this will work as our z axis
 	glm::vec3 camera_target = glm::vec3(0.0f, 0.0f, 0.0f);
-	float camera_speed = 0.1f;
+	float camera_move_speed = 0.5f;
+	float camera_rotation_speed = 0.05f;
 	float current_rads_x = 3*M_PI_2;
 	float current_rads_y = M_PI;
 	float radious = 10.0;
@@ -216,10 +266,15 @@ int main() {
 		delete[] name;
 	}
 
+	//get instructions
+	std::string instructions = read_file("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Phong_Model\\instructions.txt");
+
 	//RENDER LOOP
 	bool change_imgui = false;
 	bool show_imgui = false;
 	imgui_wrapper* imgui = new imgui_wrapper(window);
+
+	glm::mat4 rot_matrix = glm::mat4(1.0); //camera rotation
 	while(!glfwWindowShouldClose(window)) {
 
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -228,35 +283,35 @@ int main() {
 		for (auto it = key_status.begin(); it != key_status.end(); ++it) {
 			if ((*it).second == true) {
 				if ((*it).first == GLFW_KEY_KP_4) {
-					current_rads_x -= 0.01f;
+					current_rads_x -= camera_rotation_speed;
 					camera_target = get_new_camera_target(current_rads_x, radious, camera_target);
 				}
 				if ((*it).first == GLFW_KEY_KP_6) {
-					current_rads_x += 0.01f;
+					current_rads_x += camera_rotation_speed;
 					camera_target = get_new_camera_target(current_rads_x, radious, camera_target);
 				}
 				if ((*it).first == GLFW_KEY_KP_8) {
-					current_rads_y -= 0.01f;
+					current_rads_y -= camera_rotation_speed;
 					camera_target = get_new_camera_target_2(current_rads_y, radious, camera_target);
 				}
 				if ((*it).first == GLFW_KEY_KP_2) {
-					current_rads_y += 0.01f;
+					current_rads_y += camera_rotation_speed;
 					camera_target = get_new_camera_target_2(current_rads_y, radious, camera_target);
 				}
 
 				if ((*it).first == GLFW_KEY_D) {
-					camera_origin.x += camera_speed;
+					camera_origin.x += camera_move_speed;
 				}
 				if ((*it).first == GLFW_KEY_A) {
-					camera_origin.x -= camera_speed;
+					camera_origin.x -= camera_move_speed;
 				}
 				if ((*it).first == GLFW_KEY_W) {
-					camera_origin.z -= camera_speed;
+					camera_origin.z -= camera_move_speed;
 				}
 				if ((*it).first == GLFW_KEY_S) {
-					camera_origin.z += camera_speed;
+					camera_origin.z += camera_move_speed;
 				}
-
+				/*
 				//rotations should always be in the same direction, independent from the facing of the object
 				if ((*it).first == GLFW_KEY_RIGHT) {
 					//player_rotations_left_right = glm::rotate(player_rotations_left_right, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -274,9 +329,9 @@ int main() {
 					//player_rotations_up_down = glm::rotate(player_rotations_up_down, glm::radians(1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 					camera_origin.z += 0.1f;
 				}
+				*/
 			}
 		}
-
 		for (auto it = key_status_2.begin(); it != key_status_2.end(); ++it) {
 			if ((*it).second == true) {
 				if ((*it).first == GLFW_KEY_SPACE) {
@@ -286,6 +341,34 @@ int main() {
 			}
 		}
 
+		//check mouse input
+		for (auto it = mouse_mov_status.begin(); it != mouse_mov_status.end(); ++it) {
+			if ((*it).second == true) {
+
+				if ((*it).first == "up") {
+					current_rads_y -= camera_rotation_speed;
+					camera_target = get_new_camera_target_2(current_rads_y, radious, camera_target);
+				}
+				if ((*it).first == "down") {
+					current_rads_y += camera_rotation_speed;
+					camera_target = get_new_camera_target_2(current_rads_y, radious, camera_target);
+				}
+
+				if ((*it).first == "right") {
+					current_rads_x += camera_rotation_speed;	
+					camera_target = get_new_camera_target(current_rads_x, radious, camera_target);
+				}
+				if ((*it).first == "left") {
+					current_rads_x -= camera_rotation_speed;
+					camera_target = get_new_camera_target(current_rads_x, radious, camera_target);
+				}
+			}
+		}
+		mouse_mov_status["up"] = false;
+		mouse_mov_status["down"] = false;
+		mouse_mov_status["right"] = false;
+		mouse_mov_status["left"] = false;
+
 		//change imgui status
 		if (change_imgui == true){
 			show_imgui = !show_imgui;
@@ -293,7 +376,7 @@ int main() {
 		}
 
 		local_to_world = glm::translate(local_to_world, glm::vec3(0.0f, -1.0f, 0.0f));
-		view_space = glm::lookAt(camera_origin, camera_target, glm::vec3(0.0f, 1.0f, 0.0f));
+		view_space = rot_matrix * glm::lookAt(camera_origin, camera_target, glm::vec3(0.0f, 1.0f, 0.0f));
 		projection_space = glm::perspective(glm::radians(45.0f), (float)(win_width / win_height), 0.1f, 100.0f);
 
 		shader_program.Set_Mat4("model",move_object_vertices * player_rotations_left_right * player_rotations_up_down * local_to_world);
@@ -331,6 +414,7 @@ int main() {
 			std::vector<std::string> values_3{ std::to_string(light_pos.x), std::to_string(light_pos.y), std::to_string(light_pos.z) };
 			imgui->add_values_to_window(&value_titles_3, &values_3);
 
+			imgui->add_text_window("instructions", instructions);
 
 			imgui->render();
 		}

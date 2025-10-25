@@ -1,0 +1,2 @@
+KP 4, KP 6, KP 8, KP 2 : change seeing direction.
+W, A, S, D: move the camera.

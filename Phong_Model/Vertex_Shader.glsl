@@ -56,14 +56,14 @@ vec3 phongmodel(vec3 eyeposition, vec3 tnorm){
 }
 
 void main(){
-	//vertex position to clip space
-	gl_Position = projection * view * model * vec4(aPos, 1.0);
-	//tex_coord = aTexCoord;
-	tex_coord = vec2(1.0, 1.0);
 
 	vec3 camNorm;
 	vec3 camPosition;
 	getCamSpace(camNorm, camPosition);
 	
 	light_intensity = phongmodel(camPosition, camNorm);
+	//vertex position to clip space
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
+	//tex_coord = aTexCoord;
+	tex_coord = vec2(1.0, 1.0);
 }

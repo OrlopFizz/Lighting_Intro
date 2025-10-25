@@ -55,6 +55,7 @@
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="instructions.txt" />
     <Text Include="Notes.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

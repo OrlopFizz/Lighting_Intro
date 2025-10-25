@@ -10,6 +10,7 @@
 class imgui_wrapper {
 	public:
 		std::vector<std::pair<std::vector<std::string>*, std::vector<std::string>*>> windows_info;
+		std::vector<std::pair<std::string, std::string>> text_windows;
 
 		//constructor
 		imgui_wrapper(GLFWwindow* window) { init(window); };
@@ -20,5 +21,7 @@ class imgui_wrapper {
 		void shutdown();
 		void render();
 		void create_listing_window(std::string title, std::vector<std::string> value_titles, std::vector<std::string> values);
+		void add_text_window(std::string title, std::string body);
+		void create_text_window(std::string title, std::string body);
 		void add_values_to_window(std::vector<std::string>* value_titles, std::vector<std::string>* values);
 };	

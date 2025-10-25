@@ -33,10 +33,16 @@ void imgui_wrapper::render() {
 	}
 	windows_info.clear();
 
+	for (auto it = text_windows.begin(); it != text_windows.end(); ++it) {
+		create_text_window((*it).first, (*it).second);
+	}
+	text_windows.clear();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+//create the window with values
 void imgui_wrapper::create_listing_window(std::string title, std::vector<std::string> value_titles, std::vector<std::string> values) {
 	ImGui::Begin(title.c_str());
 	for (int i = 0; i < value_titles.size(); ++i) {
@@ -46,8 +52,21 @@ void imgui_wrapper::create_listing_window(std::string title, std::vector<std::st
 	}
 	ImGui::End();
 }
-
+//add values 
 void imgui_wrapper::add_values_to_window(std::vector<std::string>* value_titles, std::vector<std::string>* values) {
 	std::pair<std::vector<std::string>*, std::vector<std::string>*> new_pair { value_titles, values };
 	windows_info.push_back(new_pair);
 }
+
+void imgui_wrapper::create_text_window(std::string title, std::string body) {
+  	ImGui::Begin(title.c_str());
+	ImGui::Text(body.c_str());
+	ImGui::End();
+}
+
+void imgui_wrapper::add_text_window(std::string title, std::string body)
+{
+	std::pair<std::string, std::string> new_pair {title, body};
+	text_windows.push_back(new_pair);
+}
+

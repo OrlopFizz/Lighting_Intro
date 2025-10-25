@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lighting_intro", "Lighting_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Phong_Model", "Phong_Model\Phong_Model.vcxproj", "{9C511B1F-8BB1-4910-A1B0-3E9CF0B23B80}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhongModel_TwoSidedShading", "PhongModel_TwoSidedShading\PhongModel_TwoSidedShading.vcxproj", "{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{9C511B1F-8BB1-4910-A1B0-3E9CF0B23B80}.Release|x64.Build.0 = Release|x64
 		{9C511B1F-8BB1-4910-A1B0-3E9CF0B23B80}.Release|x86.ActiveCfg = Release|Win32
 		{9C511B1F-8BB1-4910-A1B0-3E9CF0B23B80}.Release|x86.Build.0 = Release|Win32
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Debug|x64.ActiveCfg = Debug|x64
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Debug|x64.Build.0 = Debug|x64
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Debug|x86.ActiveCfg = Debug|Win32
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Debug|x86.Build.0 = Debug|Win32
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Release|x64.ActiveCfg = Release|x64
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Release|x64.Build.0 = Release|x64
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Release|x86.ActiveCfg = Release|Win32
+		{7A75C02B-2EE4-4CF2-997B-09C5CCFE3F9E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -116,5 +116,8 @@
     <Text Include="Notes.txt">
       <Filter>ImGUI</Filter>
     </Text>
+    <Text Include="instructions.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
