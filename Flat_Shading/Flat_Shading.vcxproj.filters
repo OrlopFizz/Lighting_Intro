@@ -13,20 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ImGUI">
-      <UniqueIdentifier>{db6ef89a-84ef-433e-ae90-57d57e0317a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader_Source">
-      <UniqueIdentifier>{e34a5a7c-d08c-40b8-8de3-feb0dd4afe96}</UniqueIdentifier>
+      <UniqueIdentifier>{5c12372c-cb5c-4fb5-81d1-295cd9dea326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{c3b82a61-0efb-4cf9-a7c2-fef44b5462c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader_Program.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="Vertex_Shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+    <None Include="Fragment_Shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+    <None Include="plane_vertex_shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+    <None Include="plane_fragment_shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+    <None Include="skybox_fragment_shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+    <None Include="skybox_vertex_shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,13 +50,19 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui_Backend\imgui_impl_opengl3.h">
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader_Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui_Backend\imgui_impl_opengl3_loader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGui_Backend\imgui_impl_glfw.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui_Backend\imgui_impl_opengl3_loader.h">
+    <ClInclude Include="ImGui_Backend\imgui_impl_opengl3.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="E:\IMGUI\imgui\imconfig.h">
@@ -54,20 +74,21 @@
     <ClInclude Include="E:\IMGUI\imgui\imgui_internal.h">
       <Filter>ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Phong_Model\Notes.txt">
-      <Filter>ImGUI</Filter>
-    </Text>
-    <Text Include="instructions.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ImGui_Backend\imgui_impl_opengl3.cpp">
+    <ClCompile Include="Shader_Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui_Backend\imgui_impl_glfw.cpp">
+    <ClCompile Include="imgui_wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
@@ -76,17 +97,17 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_wrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader_Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui_Backend\imgui_impl_glfw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui_Backend\imgui_impl_opengl3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\IMGUI\imgui\imgui_widgets.cpp">
+      <Filter>ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="E:\IMGUI\imgui\imgui.cpp">
       <Filter>ImGUI</Filter>
@@ -100,17 +121,21 @@
     <ClCompile Include="E:\IMGUI\imgui\imgui_tables.cpp">
       <Filter>ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="E:\IMGUI\imgui\imgui_widgets.cpp">
-      <Filter>ImGUI</Filter>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Vertex_Shader.glsl">
-      <Filter>Shader_Source</Filter>
-    </None>
-    <None Include="Fragment_Shader.glsl">
-      <Filter>Shader_Source</Filter>
-    </None>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="splat_pack_1.png">
@@ -119,5 +144,16 @@
     <Image Include="crate2_diffuse.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="instructions.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Line_Vertex_Shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </Text>
+    <Text Include="Line_Fragment_Shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </Text>
   </ItemGroup>
 </Project>
