@@ -54,7 +54,7 @@ void fpv_camera::change_elevation(float movement) {
 
 void fpv_camera::change_heading_angle(float new_heading) {
 	float movement = new_heading - heading_angle;
-	//heading_angle = new_heading;
+	heading_angle = new_heading;
 	change_heading(movement);
 }
 

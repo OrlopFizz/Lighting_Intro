@@ -20,6 +20,10 @@ float lerp(float t, float x0, float x1) {
 	return (1 - t) * x0 + t * x1;
 }
 
+float clamp(float t, float min, float max) {
+	return glm::min(glm::max(t, min), max);
+}
+
 const char* getTypeString(GLenum type) {
 	// There are many more types than are covered here, but
 	// these are the most common in these examples.
@@ -117,52 +121,16 @@ void process_mouse_movement(GLFWwindow* window, double xpos, double ypos) {
 	//maybe lerp this shit?
 	//depending on how much the mouse moves, we calculate a new angle to traverse to.
 	//since we want the movement to be smooth, we must also lerp the angles between our current angle, and the new angle
-	mouse_movement_vector = {xpos - old_mouse_pos[0], old_mouse_pos[1] - ypos}; 
-	mouse_movement_vector = glm::normalize(mouse_movement_vector); 
-	if (mouse_movement_vector[0] > 0) {
-		//we rotate to the right
-		std::cout << "RIGHT" << '\n';
-		right_count++;
-		//generate the angle we want to reach in the end
-		float new_angle =  camera->heading_angle + (M_PI / 1800); //we move ten degrees to the right
-		camera->heading_angle = new_angle;
-		std::cout <<"new path created between " << camera->heading_angle << " and " << new_angle << '\n';
-		//generate ten angles between current_angle and angle 
-		for (float i = 0.1; i <= 1; i = i + 0.5) {
-			//add those inbetween angles to the camera rotation path
-			camera->heading_angle_path.enqueue(lerp(i, camera->heading_angle, new_angle));
-		}
-	}
-	else if (mouse_movement_vector[0] < 0) {
-		std::cout << "LEFT" << '\n';
-		left_count++;
-		//generate the angle we want to reach in the end
-		float new_angle = camera->heading_angle - (M_PI / 1800); //we move ten degrees to the right
-		camera->heading_angle = new_angle;
-		std::cout << "new path created between " << camera->heading_angle << " and " << new_angle << '\n';
-		//generate ten angles between current_angle and angle 
-		for (float i = 0.1; i <= 1; i = i + 0.5) {
-			//add those inbetween angles to the camera rotation path
-			camera->heading_angle_path.enqueue(lerp(i, camera->heading_angle, new_angle));
-		}
-	}
+	mouse_movement_vector = {old_mouse_pos[0] - xpos, ypos - old_mouse_pos[1]};
+	
+	float new_heading = camera->heading_angle + mouse_movement_vector[0] * 0.01f;
+	float new_elevation = clamp(camera->elevation_angle + mouse_movement_vector[1] * 0.01f, -M_PI / 2, M_PI / 2);
 
-	/*
-	if (mouse_movement_vector[1] > 0) {
-		std::cout << "UP" << '\n';
-		camera->raise_elevation_angle(-(camera->sideways_direction));
-	}
-	else if (mouse_movement_vector[1] < 0) {
-		std::cout << "DOWN" << '\n';
-		camera->lower_elevation_angle(camera->sideways_direction);
-	}
-	*/
-	if (xpos != old_mouse_pos[0] and ypos != old_mouse_pos[1]) {
-		mouse_movement_vector[0] = old_mouse_pos[0] - xpos;
-		mouse_movement_vector[1] = old_mouse_pos[1] - ypos;
-		old_mouse_pos[0] = xpos;
-		old_mouse_pos[1] = ypos;
-	}
+	camera->change_heading_angle(new_heading);
+	camera->change_elevation_angle(new_elevation);
+	
+	old_mouse_pos[0] = xpos;
+	old_mouse_pos[1] = ypos;
 }
 
 std::string read_file(std::string path) {
@@ -465,7 +433,7 @@ int main() {
 			imgui->add_values_to_window(&value_titles_5, &values_5);
 
 			std::vector<std::string> value_titles_7 {"Mouse position x", "Mouse position y"};
-			std::vector<std::string> values_7 { std::to_string(mouse_movement_vector[0]), std::to_string(mouse_movement_vector[1]) };
+			std::vector<std::string> values_7 { std::to_string(old_mouse_pos[0]), std::to_string(old_mouse_pos[1]) };
 			imgui->add_values_to_window(&value_titles_7, &values_7);
 			
 			std::vector<std::string> value_titles_8{ "Right Count", "Left Count" };
