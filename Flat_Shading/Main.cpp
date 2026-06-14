@@ -111,26 +111,26 @@ double last_mouse_posx = 0.0f;
 double last_mouse_posy = 0.0f;
 std::map<const char*, bool> mouse_mov_status = { {"up", false}, {"down", false}, {"left", false}, {"right", false}};
 */
-float old_mouse_pos[2] = {0.0f, 0.0f};
+double old_mouse_pos_x, old_mouse_pos_y = 0.0f;
 glm::vec2 mouse_movement_vector{ 0.0f, 0.0f };
-int right_count = 0;
-int left_count = 0;
 fpv_camera* camera = new fpv_camera(glm::vec3(10.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), (M_PI / 180)/2, 0.05f);
 void process_mouse_movement(GLFWwindow* window, double xpos, double ypos) {
-	//TODO mouse movement working, but seems kinda snappy, this is due to the changes in direction being done instantly.
-	//maybe lerp this shit?
-	//depending on how much the mouse moves, we calculate a new angle to traverse to.
-	//since we want the movement to be smooth, we must also lerp the angles between our current angle, and the new angle
-	mouse_movement_vector = {old_mouse_pos[0] - xpos, ypos - old_mouse_pos[1]};
+	//since old_mouse_pos does not strt with the actual position, we must ignore the first change while we query the actual position.
+	//otherwise, the first frame generates a huge offset
+	mouse_movement_vector = {old_mouse_pos_x - xpos, ypos - old_mouse_pos_y};
 	
 	float new_heading = camera->heading_angle + mouse_movement_vector[0] * 0.01f;
-	float new_elevation = clamp(camera->elevation_angle + mouse_movement_vector[1] * 0.01f, -M_PI / 2, M_PI / 2);
-
+	//elevation should be restricted from -90° to 90°, without actually reaching those values.
+	float new_elevation = clamp(camera->elevation_angle + mouse_movement_vector[1] * 0.01f, -89.99 * (M_PI /180), 89.99 * (M_PI / 180));
+	if (new_elevation >= 89.99 * (M_PI / 180)) {
+		int a = 1;
+	}
+	
 	camera->change_heading_angle(new_heading);
 	camera->change_elevation_angle(new_elevation);
-	
-	old_mouse_pos[0] = xpos;
-	old_mouse_pos[1] = ypos;
+
+	old_mouse_pos_x = xpos;
+	old_mouse_pos_y = ypos;
 }
 
 std::string read_file(std::string path) {
@@ -169,6 +169,8 @@ int main() {
 		glfwTerminate();
 		return -1;
 	}
+
+	glfwGetCursorPos(window, &old_mouse_pos_x, &old_mouse_pos_y); //get the actual position of the mouse cursor.
 
 	glfwMakeContextCurrent(window); //make the window the current glfw and opengl context
 
@@ -361,9 +363,6 @@ int main() {
 			change_imgui = false;
 		}
 
-		//calculate new camera angles
-		camera->move_through_path();
-
 		//NORMAL SHADER UNIFORMS
 		local_to_world = teacup->get_model_matrix();//translate local coordinates to put the model on the given world coordinates
 		view_space = camera->get_view_matrix();
@@ -433,16 +432,8 @@ int main() {
 			imgui->add_values_to_window(&value_titles_5, &values_5);
 
 			std::vector<std::string> value_titles_7 {"Mouse position x", "Mouse position y"};
-			std::vector<std::string> values_7 { std::to_string(old_mouse_pos[0]), std::to_string(old_mouse_pos[1]) };
+			std::vector<std::string> values_7 { std::to_string(old_mouse_pos_x), std::to_string(old_mouse_pos_y) };
 			imgui->add_values_to_window(&value_titles_7, &values_7);
-			
-			std::vector<std::string> value_titles_8{ "Right Count", "Left Count" };
-			std::vector<std::string> values_8{ std::to_string(right_count), std::to_string(left_count) };
-			imgui->add_values_to_window(&value_titles_8, &values_8);
-
-			std::vector<std::string> value_titles_9{"rotation path count"};
-			std::vector<std::string> values_9{ std::to_string(camera->heading_angle_path.get_lenght())};
-			imgui->add_values_to_window(&value_titles_9, &values_9);
 
 			imgui->add_text_window("instructions", instructions);
 

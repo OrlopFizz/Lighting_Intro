@@ -2,7 +2,6 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <iostream>
-#include "Queue.cpp"
 
 #include "vector"
 struct fpv_camera {
@@ -15,10 +14,6 @@ struct fpv_camera {
 		glm::vec3 forward_direction;
 		glm::vec3 sideways_direction;
 		glm::vec3 upwards_direction;
-
-		//when we rotate the camera, 
-		Queue<float> heading_angle_path {};
-		void move_through_path();
 
 		fpv_camera(glm::vec3 pCamera_Pos, glm::vec3 pForward_dir, glm::vec3 pUpwards_dir, float pRotate_Speed, float pMove_Speed);
 

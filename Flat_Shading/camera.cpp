@@ -2,14 +2,6 @@
 #include "camera.h"
 #include <math.h>
 
-void fpv_camera::move_through_path() {
-	if (heading_angle_path.get_lenght() != 0) {
-		float new_angle = heading_angle_path.dequeue();
-		change_heading_angle(new_angle);
-		std::cout << new_angle << '\n';
-	}
-}
-
 //some of these vectors dont change when we change the euler angles.
 //eg: sideways vector only changes when we change heading, upward remains the same.
 //when we elevate, upwards vector changes, but sideways remains the same.
