@@ -59,11 +59,11 @@ void Model::set_material_info() {
 	float_rendering_info["shininnes"] = shininnes; //es una propiedad del modelo
 }
 
-void Model::set_light_info(light pLight) {
-	vec4_rendering_info["light_pos"] = pLight.light_pos;
-	vec3_rendering_info["light"] = pLight.diffuse_light;
-	vec3_rendering_info["specular_light"] = pLight.specular_light;
-	vec3_rendering_info["ambient_light"] = pLight.ambient_light;
+void Model::set_light_info(light pLight) { //TODO handle various lights
+	vec4_rendering_info["lights[0].position"] = pLight.light_pos;
+	vec3_rendering_info["lights[0].ambient_light"] = pLight.ambient_light;
+	vec3_rendering_info["lights[0].diffuse_light"] = pLight.diffuse_light;
+	vec3_rendering_info["lights[0].specular_light"] = pLight.specular_light;
 }
 
 void Model::set_rendering_info() {

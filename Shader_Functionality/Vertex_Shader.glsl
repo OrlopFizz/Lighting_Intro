@@ -8,6 +8,12 @@ out vec3 Color;
 out vec3 vert_pos;
 
 //light uniform struct
+uniform struct lightInfo{
+	vec4 position;
+	vec3 ambient_light;
+	vec3 diffuse_light;
+	vec3 specular_light;
+} lights[1];
 
 uniform vec3 object_color;
 
@@ -20,21 +26,21 @@ mat4 modelview = view * model;
 mat3 normal = mat3(vec3(modelview[0]), vec3(modelview[1]), vec3(modelview[2]));
 
 //ambient reflection
-uniform vec3 ambient_light;
+//uniform vec3 ambient_light;
 uniform vec3 ambient_mat_reflectivity;
 
 //diffuse reflection
-uniform vec4 light_pos;
+//uniform vec4 light_pos;
 uniform vec3 mat_reflectivity;
-uniform vec3 light;
+//uniform vec3 light;
 
 //specular reflection
-uniform vec3 specular_light;
+//uniform vec3 specular_light;
 uniform vec3 specular_mat_reflectivity;
 uniform float shininnes;
 
 //setting up subroutines
-subroutine vec3 shadeModelType (vec3 position, vec3 normal); //defining the subroutine type, it returns vec3, is named shadeModelType, and recieves 2 vec3 parameters
+subroutine vec3 shadeModelType (lightInfo light, vec3 position, vec3 normal); //defining the subroutine type, it returns vec3, is named shadeModelType, and recieves 2 vec3 parameters
 subroutine uniform shadeModelType shadeModel; //this defines a subroutine uniform called shadeModel that calls subroutines of type shadeModelType
 
 void getCamSpace(out vec3 norm, out vec3 position){ //these parameters are set as where we place the results
@@ -42,27 +48,27 @@ void getCamSpace(out vec3 norm, out vec3 position){ //these parameters are set a
 	position = (modelview * vec4(aPos, 1.0)).xyz;
 }
 
-subroutine (shadeModelType) vec3 phongmodel(vec3 eyeposition, vec3 tnorm){
+subroutine (shadeModelType) vec3 phongmodel(lightInfo light, vec3 eyeposition, vec3 tnorm){
 	//ambient light
-	vec3 ambient_light_intensity = ambient_light * ambient_mat_reflectivity;
+	vec3 ambient_light_intensity = light.ambient_light * ambient_mat_reflectivity;
 
 	//diffuse light
 	//calculting the light intensity in this vertex
-    vec3 s = normalize(vec3(light_pos.xyz - eyeposition));
-    vec3 diffuse_light_intensity = light * mat_reflectivity * max( dot( s, tnorm ), 0.0 );
+    vec3 s = normalize(vec3(light.position.xyz - eyeposition));
+    vec3 diffuse_light_intensity = light.diffuse_light * mat_reflectivity * max( dot( s, tnorm ), 0.0 );
 
 	//specular light
 	//vec3 spec = vec3(0.0);
 	vec3 v = normalize(-eyeposition.xyz);
 	vec3 r = reflect(-s, tnorm);
-	vec3 specular_light_intensity = specular_light * specular_mat_reflectivity * pow(max(dot(r, v), 0.0), shininnes);
+	vec3 specular_light_intensity = light.specular_light * specular_mat_reflectivity * pow(max(dot(r, v), 0.0), shininnes);
 	
 	return ambient_light_intensity + diffuse_light_intensity + specular_light_intensity; 
 }
 
-subroutine (shadeModelType) vec3 diffuseOnly(vec3 position, vec3 norm){
-	vec3 s = normalize(vec3(light_pos.xyz - position));
-	vec3 diffuse_light_intensity = light * mat_reflectivity * max( dot(s, norm), 0.0);
+subroutine (shadeModelType) vec3 diffuseOnly(lightInfo light ,vec3 position, vec3 norm){
+	vec3 s = normalize(vec3(light.position.xyz - position));
+	vec3 diffuse_light_intensity = light.diffuse_light * mat_reflectivity * max( dot(s, norm), 0.0);
 	return diffuse_light_intensity;
 }
 
@@ -75,10 +81,14 @@ void main(){
 	vec3 v = normalize(-camPosition.xyz);
 	float vDotn = dot(v, camNorm);
 	if (vDotn >= 0){
-		Color = shadeModel(camPosition, camNorm);
+		for (int i = 0; i < 1; i++){
+			Color += shadeModel(lights[i], camPosition, camNorm);
+		}
 	}
 	else{
-		Color = shadeModel(camPosition, -camNorm);
+		for (int i = 0; i < 1; i++){
+			Color += shadeModel(lights[i], camPosition, -camNorm);
+		}
 	}
 
 	//vertex position to clip space

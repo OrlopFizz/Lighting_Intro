@@ -28,6 +28,7 @@ class Shader_Program {
 	
 		void Read_Compile_Shader_Source(const char* vert_shader_path, const char* frag_shader_path);
 		void Link_Create_Shader_Program(unsigned int vert_shader, unsigned int frag_shader);
+		void get_uniform_declaration(std::string shader_source);
 
 		//TODO set up a way for subroutines to be identified and a method to set them up when needed
 		bool Use_Program();

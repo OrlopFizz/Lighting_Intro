@@ -37,6 +37,8 @@ uniform vec3 specular_light;
 uniform vec3 specular_mat_reflectivity;
 uniform float shininnes;
 
+//setting up subroutines
+
 void getCamSpace(out vec3 norm, out vec3 position){ //these parameters are set as where we place the results
 	norm = normalize(normal * Normal_Coords); //we can access the public uniforms and variables from anywhere. in the program.
 	position = (modelview * vec4(aPos, 1.0)).xyz;

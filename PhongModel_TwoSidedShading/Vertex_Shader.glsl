@@ -7,8 +7,8 @@ layout(location = 2) in vec2 aTexCoord;
 //output variables
 out vec2 tex_coord;
 out vec3 Color;
-//out vec3 front_color;
-//out vec3 back_color;
+out vec3 front_color;
+out vec3 back_color;
 
 //light uniform struct
 
@@ -73,8 +73,8 @@ void main(){
 		Color = phongmodel(camPosition, -camNorm);
 	}
 
-	//front_color = phongmodel(camPosition, camNorm);
-	//back_color = phongmodel(camPosition, -camNorm);
+	front_color = phongmodel(camPosition, camNorm);
+	back_color = phongmodel(camPosition, -camNorm);
 
 	//vertex position to clip space
 	gl_Position = projection * view * model * vec4(aPos, 1.0);

@@ -261,13 +261,6 @@ int main() {
 	glm::vec3 specular_light = glm::vec3(1.0f, 1.0f, 1.0f);
 	//ambient light
 	glm::vec3 ambient_light = glm::vec3(0.4f, 0.4f, 0.4f);
-
-	/*
-teacup->vec4_rendering_info["light_pos"] = light_pos; //sale de la definicion del mundo en general, valdria la pena organizar esto mejor
-teacup->vec3_rendering_info["light"] = diffuse_light; //viene de la definicion del mundo en general
-teacup->vec3_rendering_info["specular_light"] = glm::vec3(1.0f, 1.0f, 1.0f); //es una propiedad del mundo en general
-teacup->vec3_rendering_info["ambient_light"] = ambient_light; //es una propiedad del mundo en general
-*/
 	light* light_1 = new light(light_pos, diffuse_light, specular_light, ambient_light);
 
 	//DEBUG ACTIVE UNIFORMS
@@ -386,6 +379,8 @@ teacup->vec3_rendering_info["ambient_light"] = ambient_light; //es una propiedad
 			change_imgui = false;
 		}
 
+		//TODO refine the way uniforms are passes between models and shader programs.
+		
 		//view space and projection setup
 		view_space = camera->get_view_matrix();
 		projection_space = camera->get_projection_matrix(win_width, win_height);
@@ -408,7 +403,7 @@ teacup->vec3_rendering_info["ambient_light"] = ambient_light; //es una propiedad
 		plane->set_material_info();
 		plane->set_light_info(*light_1);
 		plane->draw();
-
+		
 		//SET OBJ_3 SHADER UNIFORMS
 		obj_3->set_camera_info(*camera, win_width, win_height);
 		obj_3->set_material_info();

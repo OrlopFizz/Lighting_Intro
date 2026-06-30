@@ -40,12 +40,14 @@ void Shader_Program::Read_Compile_Shader_Source(const char* vert_shader_path, co
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &shader_code_char, NULL);
 	glCompileShader(vertex_shader);
+	get_uniform_declaration(shader_code_char);
 
 	shader_code_char = fragment_code.c_str();
 	unsigned int fragment_shader;
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment_shader, 1, &shader_code_char, NULL);
 	glCompileShader(fragment_shader);
+	get_uniform_declaration(shader_code_char);
 
 	int success;
 	char infolog[512];
@@ -85,6 +87,14 @@ void Shader_Program::Link_Create_Shader_Program(unsigned int vert_shader, unsign
 		glDeleteShader(vert_shader);
 		glDeleteShader(frag_shader);
 	}
+}
+
+void Shader_Program::get_uniform_declaration(std::string source) {
+	int index = source.find("uniorm");
+	while (index != std::string::npos) {
+		//TODO find the uniform declarations for the given source
+	}
+	
 }
 
 bool Shader_Program::Use_Program() {
