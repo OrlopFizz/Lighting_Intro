@@ -10,6 +10,7 @@
 #include "Skybox.h"
 #include "Line.h"
 #include "Light.h"
+#include "material.h"
 
 #include <iostream>
 #include <map>
@@ -114,7 +115,7 @@ std::map<const char*, bool> mouse_mov_status = { {"up", false}, {"down", false},
 */
 double old_mouse_pos_x, old_mouse_pos_y = 0.0f;
 glm::vec2 mouse_movement_vector{ 0.0f, 0.0f };
-fpv_camera* camera = new fpv_camera(glm::vec3(10.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), (M_PI / 180)/2, 0.05f);
+fpv_camera* camera = new fpv_camera(glm::vec3(10.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), (M_PI / 180)/2, 0.5f);
 void process_mouse_movement(GLFWwindow* window, double xpos, double ypos) {
 	//since old_mouse_pos does not strt with the actual position, we must ignore the first change while we query the actual position.
 	//otherwise, the first frame generates a huge offset
@@ -141,6 +142,29 @@ std::string read_file(std::string path) {
 	return content_stream.str();
 }
 
+void set_required_uniforms(Shader_Program* program, Model* pModel) {
+	for (auto it = program->uniform_map.begin(); it != program->uniform_map.end(); ++it) { //for every required uniform, look for it in the model
+		std::string uniform_name = it->first;
+		std::string uniform_type = it->second;
+		if (uniform_type == "mat4") {
+			program->Set_Mat4(uniform_name, pModel->mat4_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "mat3") {
+			program->Set_Mat3(uniform_name, pModel->mat3_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "vec4") {
+			program->Set_Vec4(uniform_name, pModel->vec4_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "vec3") {
+			program->Set_Vec3(uniform_name, pModel->vec3_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "float") {
+			program->Set_Float(uniform_name, pModel->float_rendering_info[uniform_name]);
+		}
+	}
+}
+
+
 /*
 * ------------------------------//--------------------------
 * ------------------------------//--------------------------
@@ -160,10 +184,8 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_API, GLFW_OPENGL_API);
 
-	int win_width = 800;
-	int win_height = 800;
-	int half_width = 400;
-	int half_height = 400;
+	int win_width = 1600;
+	int win_height = 1000;
 	GLFWwindow* window = glfwCreateWindow(win_width, win_height, "lighting intro", NULL, NULL);
 	if (window == NULL) { //AN ERROR OCCURED WHEN CREATING THE WINDOW
 		std::cout << "FAILED TO CREATE A GLFW WINDOW" << std::endl;
@@ -196,18 +218,32 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	//CONFIGURE SHADERS
+	std::map <std::string, std::string> shader_uniform_map = {	{"lights[0].position", "vec4"},
+																{"lights[0].ambient_light", "vec3"},
+																{"lights[0].diffuse_light", "vec3"},
+																{"lights[0].specular_light", "vec3"},
+																{"object_color", "vec3"},
+																{"model", "mat4"},
+																{"view", "mat4"},
+																{"projection", "mat4"},
+																{"ambient_mat_reflectivity", "vec3"},
+																{"mat_reflectivity", "vec3"},
+																{"specular_mat_reflectivity", "vec3"},
+																{"shininnes", "float"}
+															 };
 	Shader_Program shader_program = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Fragment_Shader.glsl"); //this shader is for the teacup
+	shader_program.uniform_map = shader_uniform_map;
+	shader_uniform_map.clear();
+
+	shader_uniform_map = {	{"model", "mat4"},
+							{"view", "mat4"},
+							{"projection", "mat4"}
+						};
 	Shader_Program shader_program_plane = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_vertex_shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_fragment_shader.glsl"); //this shader is for the plane we walk on
+	shader_program_plane.uniform_map = shader_uniform_map;
+	shader_uniform_map.clear();
+
 	Shader_Program shader_program_line = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_Fragment_Shader.glsl");
-	
-	/*
-	teacup->mat4_rendering_info["model"] = local_to_world; //este sale del modelo
-	teacup->vec3_rendering_info["mat_reflectivity"] = diffuse_mat_reflectivity; //viene del objeto
-	teacup->vec3_rendering_info["object_color"] = glm::vec3(191.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f); //es una caracteristica del modelo
-	teacup->vec3_rendering_info["specular_mat_reflectivity"] = glm::vec3(0.8f, 0.8f, 0.8f); //es una propiedad del modelo
-	teacup->vec3_rendering_info["ambient_light"] = ambient_mat_reflectivity; //es una propiedad del modelo
-	teacup->float_rendering_info["shininnes"] = 100.0f; //es una propiedad del modelo
-	*/
 
 	//set up the model
 	//here we set up the various buffers and populate them with the info we find in the model
@@ -216,14 +252,22 @@ int main() {
 	glm::vec3 specular_mat_reflectivity = glm::vec3(0.8f, 0.8f, 0.8f);
 	glm::vec3 ambient_mat_reflectivity = glm::vec3(0.9f, 0.5f, 0.3f);
 	float shininnes = 100.0f;
-	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), diffuse_mat_reflectivity, object_color, specular_mat_reflectivity, ambient_mat_reflectivity, shininnes, shader_program);
+	
+	Material* mat = new Material(ambient_mat_reflectivity, diffuse_mat_reflectivity, specular_mat_reflectivity, shininnes, object_color);
+	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), shader_program);
 	Model* plane = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\grass_plane.obj", glm::vec3(0.0f, 0.0f, 0.0f), shader_program_plane);
-	Model* obj_3 = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\poche\\Untitled3.obj", glm::vec3(10.0f, 10.0f, 0.0f), diffuse_mat_reflectivity, object_color, specular_mat_reflectivity, ambient_mat_reflectivity, shininnes, shader_program);
+	Model* obj_3 = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\poche\\Untitled3.obj", glm::vec3(10.0f, 10.0f, 0.0f), *mat, shader_program);
 	float vert1[3] = {0.0f, 0.0f, 0.0f};
 	float vert2[3] = {10.0f, 10.0f, 0.f};
 	Line* line = new Line(vert1, vert2);
 
+	shader_uniform_map = { {"view", "mat4"},
+						   {"projection", "mat4"}
+						 };
 	Shader_Program shader_program_skybox = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\skybox_vertex_shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\skybox_fragment_shader.glsl");
+	shader_program_skybox.uniform_map = shader_uniform_map;
+	shader_uniform_map.clear();
+	
 	std::map<const char*, const char*> texture_dict = {
 		{"front", "C:\\Users\\Alejandro\\Pictures\\purple_skybox\\front.png"},
 		{"back", "C:\\Users\\Alejandro\\Pictures\\purple_skybox\\back.png"},
@@ -378,8 +422,6 @@ int main() {
 			show_imgui = !show_imgui;
 			change_imgui = false;
 		}
-
-		//TODO refine the way uniforms are passes between models and shader programs.
 		
 		//view space and projection setup
 		view_space = camera->get_view_matrix();
@@ -412,7 +454,6 @@ int main() {
 
 		//CALCULATE NEW VERTICES TO DRAW A LINE OF
 		float vert1[3] = { 0.0f, 0.0f, 0.0f };
-		//float vert2[3] = { (mouse_pos[0] - half_width) / 400 , (half_height - mouse_pos[1]) / 400, 0.0f };
 		float vert2[3] = { mouse_movement_vector[0], mouse_movement_vector[1], 0.0f};
 		line->change_vertices(vert1, vert2);
 

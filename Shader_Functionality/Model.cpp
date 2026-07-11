@@ -52,11 +52,11 @@ void Model::set_camera_info(fpv_camera camera, float win_width, float win_height
 
 void Model::set_material_info() {
 	mat4_rendering_info["model"] = get_model_matrix(); //este sale del modelo
-	vec3_rendering_info["mat_reflectivity"] = diffuse_mat_reflectivity; //viene del objeto
-	vec3_rendering_info["object_color"] = object_color; //es una caracteristica del modelo
-	vec3_rendering_info["specular_mat_reflectivity"] = specular_mat_reflectivity; //es una propiedad del modelo
-	vec3_rendering_info["ambient_mat_reflectivity"] = ambient_mat_reflectivity; //es una propiedad del modelo
-	float_rendering_info["shininnes"] = shininnes; //es una propiedad del modelo
+	vec3_rendering_info["mat_reflectivity"] = material.diffuse_reflectivity; //viene del objeto
+	vec3_rendering_info["object_color"] = material.color; //es una caracteristica del modelo
+	vec3_rendering_info["specular_mat_reflectivity"] = material.specular_reflectivity; //es una propiedad del modelo
+	vec3_rendering_info["ambient_mat_reflectivity"] = material.ambient_reflectivity; //es una propiedad del modelo
+	float_rendering_info["shininnes"] = material.shininess; //es una propiedad del modelo
 }
 
 void Model::set_light_info(light pLight) { //TODO handle various lights
@@ -88,11 +88,33 @@ void Model::set_rendering_info() {
 	}
 }
 
+void Model::set_required_uniforms() {
+	for (auto it = program.uniform_map.begin(); it != program.uniform_map.end(); ++it) { //for every required uniform, look for it in the model
+		std::string uniform_name = it->first;
+		std::string uniform_type = it->second;
+		if (uniform_type == "mat4") {
+			program.Set_Mat4(uniform_name, mat4_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "mat3") {
+			program.Set_Mat3(uniform_name, mat3_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "vec4") {
+			program.Set_Vec4(uniform_name, vec4_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "vec3") {
+			program.Set_Vec3(uniform_name, vec3_rendering_info[uniform_name]);
+		}
+		if (uniform_type == "float") {
+			program.Set_Float(uniform_name, float_rendering_info[uniform_name]);
+		}
+	}
+}
+
 void Model::draw()
 {
 	//set up program uniforms
 	program.Use_Program();
-	set_rendering_info();
+	set_required_uniforms();
 	for (Mesh mesh : meshes) {
 		mesh.draw(program);
 	}

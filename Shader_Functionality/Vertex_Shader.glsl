@@ -15,8 +15,6 @@ uniform struct lightInfo{
 	vec3 specular_light;
 } lights[1];
 
-uniform vec3 object_color;
-
 //perspective stuff, this could go on a uniform block, tbh
 uniform mat4 model;
 uniform mat4 view;
@@ -26,16 +24,12 @@ mat4 modelview = view * model;
 mat3 normal = mat3(vec3(modelview[0]), vec3(modelview[1]), vec3(modelview[2]));
 
 //ambient reflection
-//uniform vec3 ambient_light;
 uniform vec3 ambient_mat_reflectivity;
 
 //diffuse reflection
-//uniform vec4 light_pos;
 uniform vec3 mat_reflectivity;
-//uniform vec3 light;
 
 //specular reflection
-//uniform vec3 specular_light;
 uniform vec3 specular_mat_reflectivity;
 uniform float shininnes;
 

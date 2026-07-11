@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "Light.h"
 #include "Mesh.h"
+#include "Material.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -20,27 +21,21 @@ class Model {
 			loadModel(path);
 			local_position = pLocal_Position;
 			program = pProgram;
+			material = *new Material();
 		}
-		Model(const char* path, glm::vec3 pLocal_Position, glm::vec3 pDiffuse_Mat_reflectivity, glm::vec3 pObject_color, glm::vec3 pSpecular_mat_reflectivity, glm::vec3 pAmbient_mat_reflectivity, float pShininnes , Shader_Program pProgram) {
+		//build a model including the different material data
+		Model(const char* path, glm::vec3 pLocal_Position, Material pMaterial, Shader_Program pProgram) {
 			loadModel(path);
 			local_position = pLocal_Position;
-			diffuse_mat_reflectivity = pDiffuse_Mat_reflectivity;
-			object_color = pObject_color;
-			specular_mat_reflectivity = pSpecular_mat_reflectivity;
-			ambient_mat_reflectivity = pAmbient_mat_reflectivity;
-			shininnes = pShininnes;
 			program = pProgram;
+			material = pMaterial;
 		}
 		//LOCATION INFO
 		glm::vec3 local_position;
 		glm::mat4 get_model_matrix();
 
 		//material info, this should be stored in the rendering info
-		glm::vec3 diffuse_mat_reflectivity;
-		glm::vec3 object_color;
-		glm::vec3 specular_mat_reflectivity;
-		glm::vec3 ambient_mat_reflectivity;
-		float shininnes;
+		Material material;
 
 		void set_camera_info(fpv_camera camera, float win_width, float win_height);
 		void set_material_info(); //TODO refine way to change material info, right now it sets everything up whenever we call it
@@ -54,6 +49,7 @@ class Model {
 		std::map<std::string, glm::vec3> vec3_rendering_info = {};
 		std::map<std::string, float> float_rendering_info = {};
 		void set_rendering_info();
+		void set_required_uniforms();
 		void draw();
 	private:
 		

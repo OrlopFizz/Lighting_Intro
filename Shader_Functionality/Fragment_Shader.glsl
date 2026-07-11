@@ -39,6 +39,13 @@ subroutine uniform FragmentFunctionType FragmentFunction;
 
 random rand;
 
+float linearize_depth(float depth){
+	float near = 0.1;
+	float far = 100.0;
+	float z = gl_FragCoord.z * 2.0 - 1.0;
+	return (2.0 * near * far) / (far + near - z * (far - near));
+}
+
 //regular color info from the vertex shader
 subroutine (FragmentFunctionType) vec4 regular_func(){
 	return vec4(Color, 1.0) * vec4(object_color, 1.0);
@@ -56,6 +63,18 @@ subroutine (FragmentFunctionType) vec4 discard_fragments(){
 		discard;
 	}
 	return vec4(Color, 1.0) * vec4(object_color, 1.0);
+}
+
+subroutine (FragmentFunctionType) vec4 depth_buffer(){
+	return vec4(vec3(gl_FragCoord.z), 1.0); //vector made up of the z depth value
+}
+
+subroutine (FragmentFunctionType) vec4 linearized_Depth(){ // way to avoid depth precision problems?
+	float near = 0.1;
+	float far = 100.0;
+	float z = gl_FragCoord.z * 2.0 - 1.0;
+	float linear_z = (2.0 * near * far) / (far + near - z * (far - near)) / far;
+	return vec4(vec3(linear_z), 1.0);
 }
 
 void main(){

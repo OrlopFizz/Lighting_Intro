@@ -66,6 +66,8 @@ void Mesh::draw(Shader_Program& pshader)
 	GLuint normal_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "regular_func");
 	GLuint random_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "random_colors_for_fragments");
 	GLuint discard_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "discard_fragments");
+	GLuint depth_buffer_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "depth_buffer");
+	GLuint linearized_depth_buffer_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "linearized_Depth");
 	glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &phongindex);
 	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &normal_frag);
 	//draw the mesh

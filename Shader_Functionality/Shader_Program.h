@@ -23,16 +23,22 @@ using func_ = std::function<int(int, int)>;
 class Shader_Program {
 	public:
 		unsigned int shader_program_id {0};
+		std::map<std::string, std::string> uniform_map = {};
+
 		Shader_Program() = default;
 		Shader_Program(const char* vert_shader_path, const char* frag_shader_path); //constructor, does everything and ultimately generates the shader_program_id
 	
 		void Read_Compile_Shader_Source(const char* vert_shader_path, const char* frag_shader_path);
 		void Link_Create_Shader_Program(unsigned int vert_shader, unsigned int frag_shader);
-		void get_uniform_declaration(std::string shader_source);
 
 		//TODO set up a way for subroutines to be identified and a method to set them up when needed
 		bool Use_Program();
-	
+
+		//methods to add uniform knowledge to the shader program.
+		//the values added here will let the shader program ask the model for them specifically.
+		void add_uniform(std::string pName, std::string pType);
+		void add_uniforms(std::map<std::string, std::string> pMap);
+		
 		void Set_Bool(const std::string& name, bool value) const;
 		void Set_Int(const std::string& name, int value) const;
 		void Set_Float(const std::string& name, float value) const;
