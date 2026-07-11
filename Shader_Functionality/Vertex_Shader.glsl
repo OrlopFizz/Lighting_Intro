@@ -1,4 +1,5 @@
-//VERTEX SHADER
+//GOURAUD (per vertex shading) VERTEX SHADER
+//since we are calculating the colors in the vertex shader, what we do is then interpolate the value between vertices using the fragment shader.
 #version 460
 layout(location = 0) in vec3 aPos; //we bind this input vector to a location for the vertex attrib arrays defined in code
 layout(location = 1) in vec3 Normal_Coords;
@@ -47,8 +48,14 @@ subroutine (shadeModelType) vec3 phongmodel(lightInfo light, vec3 eyeposition, v
 	vec3 ambient_light_intensity = light.ambient_light * ambient_mat_reflectivity;
 
 	//diffuse light
-	//calculting the light intensity in this vertex
-    vec3 s = normalize(vec3(light.position.xyz - eyeposition));
+	//calculting the light intensity in this vertex. 
+	vec3 s;
+	if (light.position.w == 0.0f){
+		s = normalize(light.position.xyz); // the light is a directional light
+	}
+	else{
+	    s = normalize(light.position.xyz - eyeposition); //the light is a positional light
+	}
     vec3 diffuse_light_intensity = light.diffuse_light * mat_reflectivity * max( dot( s, tnorm ), 0.0 );
 
 	//specular light

@@ -1,4 +1,5 @@
-//FRAGMENT SHADER
+//GOURAUD (per vertex shading) FRAGMENT SHADER
+//we mainly just interpolate and mix things here.
 #version 460
 in vec3 Color;
 in vec3 vert_pos;

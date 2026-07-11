@@ -59,7 +59,7 @@ void Mesh::draw(Shader_Program& pshader)
 		//glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		glBindTextureUnit(i, textures[i].id);
 	}
-
+	/*
 	pshader.Use_Program();
 	GLuint phongindex = glGetSubroutineIndex(pshader.shader_program_id, GL_VERTEX_SHADER, "phongmodel");
 	GLuint diffuseindex = glGetSubroutineIndex(pshader.shader_program_id, GL_VERTEX_SHADER, "diffuseOnly");
@@ -70,6 +70,7 @@ void Mesh::draw(Shader_Program& pshader)
 	GLuint linearized_depth_buffer_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "linearized_Depth");
 	glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &phongindex);
 	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &normal_frag);
+	*/
 	//draw the mesh
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

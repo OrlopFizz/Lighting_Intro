@@ -231,7 +231,7 @@ int main() {
 																{"specular_mat_reflectivity", "vec3"},
 																{"shininnes", "float"}
 															 };
-	Shader_Program shader_program = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Fragment_Shader.glsl"); //this shader is for the teacup
+	Shader_Program shader_program = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Fragment_Shader.glsl"); //this shader is for the teacup
 	shader_program.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
 
@@ -254,7 +254,7 @@ int main() {
 	float shininnes = 100.0f;
 	
 	Material* mat = new Material(ambient_mat_reflectivity, diffuse_mat_reflectivity, specular_mat_reflectivity, shininnes, object_color);
-	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), shader_program);
+	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), *mat,shader_program);
 	Model* plane = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\grass_plane.obj", glm::vec3(0.0f, 0.0f, 0.0f), shader_program_plane);
 	Model* obj_3 = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\poche\\Untitled3.obj", glm::vec3(10.0f, 10.0f, 0.0f), *mat, shader_program);
 	float vert1[3] = {0.0f, 0.0f, 0.0f};

@@ -148,6 +148,9 @@
     <None Include="plane_vertex_shader.glsl">
       <Filter>Shader_Source</Filter>
     </None>
+    <None Include="Phong_Fragment_Shader.glsl">
+      <Filter>Shader_Source</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="crate2_diffuse.png">
@@ -160,6 +163,9 @@
   <ItemGroup>
     <Text Include="instructions.txt">
       <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Phong_Vertex_Shader.glsl">
+      <Filter>Shader_Source</Filter>
     </Text>
   </ItemGroup>
 </Project>
