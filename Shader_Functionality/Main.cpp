@@ -115,19 +115,19 @@ std::map<const char*, bool> mouse_mov_status = { {"up", false}, {"down", false},
 */
 double old_mouse_pos_x, old_mouse_pos_y = 0.0f;
 glm::vec2 mouse_movement_vector{ 0.0f, 0.0f };
-fpv_camera* camera = new fpv_camera(glm::vec3(10.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), (M_PI / 180)/2, 0.5f);
+fpv_camera* camera = new fpv_camera(glm::vec3(10.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), (M_PI / 180) / 2, 0.5f);
 void process_mouse_movement(GLFWwindow* window, double xpos, double ypos) {
 	//since old_mouse_pos does not strt with the actual position, we must ignore the first change while we query the actual position.
 	//otherwise, the first frame generates a huge offset
-	mouse_movement_vector = {old_mouse_pos_x - xpos, ypos - old_mouse_pos_y};
-	
+	mouse_movement_vector = { old_mouse_pos_x - xpos, ypos - old_mouse_pos_y };
+
 	float new_heading = camera->heading_angle + mouse_movement_vector[0] * 0.01f;
 	//elevation should be restricted from -90° to 90°, without actually reaching those values.
-	float new_elevation = clamp(camera->elevation_angle + mouse_movement_vector[1] * 0.01f, -89.99 * (M_PI /180), 89.99 * (M_PI / 180));
+	float new_elevation = clamp(camera->elevation_angle + mouse_movement_vector[1] * 0.01f, -89.99 * (M_PI / 180), 89.99 * (M_PI / 180));
 	if (new_elevation >= 89.99 * (M_PI / 180)) {
 		int a = 1;
 	}
-	
+
 	camera->change_heading_angle(new_heading);
 	camera->change_elevation_angle(new_elevation);
 
@@ -218,7 +218,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	//CONFIGURE SHADERS
-	std::map <std::string, std::string> shader_uniform_map = {	{"lights[0].position", "vec4"},
+	std::map <std::string, std::string> shader_uniform_map = { {"lights[0].position", "vec4"},
 																{"lights[0].ambient_light", "vec3"},
 																{"lights[0].diffuse_light", "vec3"},
 																{"lights[0].specular_light", "vec3"},
@@ -230,15 +230,15 @@ int main() {
 																{"mat_reflectivity", "vec3"},
 																{"specular_mat_reflectivity", "vec3"},
 																{"shininnes", "float"}
-															 };
+	};
 	Shader_Program shader_program = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Fragment_Shader.glsl"); //this shader is for the teacup
 	shader_program.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
 
-	shader_uniform_map = {	{"model", "mat4"},
+	shader_uniform_map = { {"model", "mat4"},
 							{"view", "mat4"},
 							{"projection", "mat4"}
-						};
+	};
 	Shader_Program shader_program_plane = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_vertex_shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_fragment_shader.glsl"); //this shader is for the plane we walk on
 	shader_program_plane.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
@@ -252,22 +252,22 @@ int main() {
 	glm::vec3 specular_mat_reflectivity = glm::vec3(0.8f, 0.8f, 0.8f);
 	glm::vec3 ambient_mat_reflectivity = glm::vec3(0.9f, 0.5f, 0.3f);
 	float shininnes = 100.0f;
-	
+
 	Material* mat = new Material(ambient_mat_reflectivity, diffuse_mat_reflectivity, specular_mat_reflectivity, shininnes, object_color);
-	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), *mat,shader_program);
+	Model* teacup = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\UTAH_BLEND.obj", glm::vec3(0.0f, 0.0f, 0.0f), *mat, shader_program);
 	Model* plane = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\grass_plane.obj", glm::vec3(0.0f, 0.0f, 0.0f), shader_program_plane);
 	Model* obj_3 = new Model("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\poche\\Untitled3.obj", glm::vec3(10.0f, 10.0f, 0.0f), *mat, shader_program);
-	float vert1[3] = {0.0f, 0.0f, 0.0f};
-	float vert2[3] = {10.0f, 10.0f, 0.f};
+	float vert1[3] = { 0.0f, 0.0f, 0.0f };
+	float vert2[3] = { 10.0f, 10.0f, 0.f };
 	Line* line = new Line(vert1, vert2);
 
 	shader_uniform_map = { {"view", "mat4"},
 						   {"projection", "mat4"}
-						 };
+	};
 	Shader_Program shader_program_skybox = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\skybox_vertex_shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\skybox_fragment_shader.glsl");
 	shader_program_skybox.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
-	
+
 	std::map<const char*, const char*> texture_dict = {
 		{"front", "C:\\Users\\Alejandro\\Pictures\\purple_skybox\\front.png"},
 		{"back", "C:\\Users\\Alejandro\\Pictures\\purple_skybox\\back.png"},
@@ -386,10 +386,10 @@ int main() {
 				}
 
 				if ((*it).first == GLFW_KEY_KP_8) {
-					camera->change_elevation_angle(M_PI/6);
+					camera->change_elevation_angle(M_PI / 6);
 				}
 				if ((*it).first == GLFW_KEY_KP_2) {
-					camera->change_elevation_angle(-M_PI/6);
+					camera->change_elevation_angle(-M_PI / 6);
 				}
 
 				if ((*it).first == GLFW_KEY_D) {
@@ -422,7 +422,7 @@ int main() {
 			show_imgui = !show_imgui;
 			change_imgui = false;
 		}
-		
+
 		//view space and projection setup
 		view_space = camera->get_view_matrix();
 		projection_space = camera->get_projection_matrix(win_width, win_height);
@@ -445,7 +445,7 @@ int main() {
 		plane->set_material_info();
 		plane->set_light_info(*light_1);
 		plane->draw();
-		
+
 		//SET OBJ_3 SHADER UNIFORMS
 		obj_3->set_camera_info(*camera, win_width, win_height);
 		obj_3->set_material_info();
@@ -454,7 +454,7 @@ int main() {
 
 		//CALCULATE NEW VERTICES TO DRAW A LINE OF
 		float vert1[3] = { 0.0f, 0.0f, 0.0f };
-		float vert2[3] = { mouse_movement_vector[0], mouse_movement_vector[1], 0.0f};
+		float vert2[3] = { mouse_movement_vector[0], mouse_movement_vector[1], 0.0f };
 		line->change_vertices(vert1, vert2);
 
 		if (show_imgui == true) {
@@ -482,8 +482,8 @@ int main() {
 			std::vector<std::string> values_5{ std::to_string(camera->sideways_direction.x), std::to_string(camera->sideways_direction.y), std::to_string(camera->sideways_direction.z) };
 			imgui->add_values_to_window(&value_titles_5, &values_5);
 
-			std::vector<std::string> value_titles_7 {"Mouse position x", "Mouse position y"};
-			std::vector<std::string> values_7 { std::to_string(old_mouse_pos_x), std::to_string(old_mouse_pos_y) };
+			std::vector<std::string> value_titles_7{ "Mouse position x", "Mouse position y" };
+			std::vector<std::string> values_7{ std::to_string(old_mouse_pos_x), std::to_string(old_mouse_pos_y) };
 			imgui->add_values_to_window(&value_titles_7, &values_7);
 
 			imgui->add_text_window("instructions", instructions);
