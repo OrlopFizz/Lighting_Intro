@@ -218,11 +218,13 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	//CONFIGURE SHADERS
+	const char* vertex_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\BlinnPhong_Vertex_shader.glsl";
+	const char* fragment_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\BlinnPhong_Fragment_shader.glsl";
 	std::map <std::string, std::string> shader_uniform_map = { {"lights[0].position", "vec4"},
 																{"lights[0].ambient_light", "vec3"},
 																{"lights[0].diffuse_light", "vec3"},
 																{"lights[0].specular_light", "vec3"},
-																{"object_color", "vec3"},
+																//{"object_color", "vec3"},
 																{"model", "mat4"},
 																{"view", "mat4"},
 																{"projection", "mat4"},
@@ -231,19 +233,23 @@ int main() {
 																{"specular_mat_reflectivity", "vec3"},
 																{"shininnes", "float"}
 	};
-	Shader_Program shader_program = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Phong_Fragment_Shader.glsl"); //this shader is for the teacup
+	Shader_Program shader_program = Shader_Program(vertex_shader_path, fragment_shader_path); //this shader is for the teacup
 	shader_program.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
 
+	vertex_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_vertex_shader.glsl";
+	fragment_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_fragment_shader.glsl";
 	shader_uniform_map = { {"model", "mat4"},
 							{"view", "mat4"},
 							{"projection", "mat4"}
 	};
-	Shader_Program shader_program_plane = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_vertex_shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\plane_fragment_shader.glsl"); //this shader is for the plane we walk on
+	Shader_Program shader_program_plane = Shader_Program(vertex_shader_path, fragment_shader_path); //this shader is for the plane we walk on
 	shader_program_plane.uniform_map = shader_uniform_map;
 	shader_uniform_map.clear();
 
-	Shader_Program shader_program_line = Shader_Program("C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_Vertex_Shader.glsl", "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_Fragment_Shader.glsl");
+	vertex_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_vertex_shader.glsl";
+	fragment_shader_path = "C:\\Users\\Alejandro\\source\\repos\\Lighting_intro\\Shader_Functionality\\Line_fragment_shader.glsl";
+	Shader_Program shader_program_line = Shader_Program(vertex_shader_path, fragment_shader_path);
 
 	//set up the model
 	//here we set up the various buffers and populate them with the info we find in the model
@@ -304,7 +310,8 @@ int main() {
 	//specular light
 	glm::vec3 specular_light = glm::vec3(1.0f, 1.0f, 1.0f);
 	//ambient light
-	glm::vec3 ambient_light = glm::vec3(0.4f, 0.4f, 0.4f);
+	//glm::vec3 ambient_light = glm::vec3(0.4f, 0.4f, 0.4f);
+	glm::vec3 ambient_light = glm::vec3(0.1f);
 	light* light_1 = new light(light_pos, diffuse_light, specular_light, ambient_light);
 
 	//DEBUG ACTIVE UNIFORMS

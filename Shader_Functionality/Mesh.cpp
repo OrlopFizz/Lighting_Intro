@@ -59,8 +59,12 @@ void Mesh::draw(Shader_Program& pshader)
 		//glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		glBindTextureUnit(i, textures[i].id);
 	}
-	/*
 	pshader.Use_Program();
+	//PHONG VERTEX / FRAGMENT SHADERS.
+	GLuint phongindex = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "phongmodel");
+	GLuint blinnphongindex = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "blinnphongmodel");
+	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &blinnphongindex);
+	/* VERTEX / FRAGMENT SHADERS
 	GLuint phongindex = glGetSubroutineIndex(pshader.shader_program_id, GL_VERTEX_SHADER, "phongmodel");
 	GLuint diffuseindex = glGetSubroutineIndex(pshader.shader_program_id, GL_VERTEX_SHADER, "diffuseOnly");
 	GLuint normal_frag = glGetSubroutineIndex(pshader.shader_program_id, GL_FRAGMENT_SHADER, "regular_func");

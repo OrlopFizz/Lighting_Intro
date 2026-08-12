@@ -51,10 +51,10 @@ subroutine (shadeModelType) vec3 phongmodel(lightInfo light, vec3 eyeposition, v
 	//calculting the light intensity in this vertex. 
 	vec3 s;
 	if (light.position.w == 0.0f){
-		s = normalize(light.position.xyz); // the light is a directional light
+		s = normalize(vec3(light.position.xyz)); // the light is a directional light
 	}
 	else{
-	    s = normalize(light.position.xyz - eyeposition); //the light is a positional light
+	    s = normalize(vec3(light.position.xyz - eyeposition)); //the light is a positional light
 	}
     vec3 diffuse_light_intensity = light.diffuse_light * mat_reflectivity * max( dot( s, tnorm ), 0.0 );
 
@@ -81,14 +81,15 @@ void main(){
 
 	vec3 v = normalize(-camPosition.xyz);
 	float vDotn = dot(v, camNorm);
+	Color = vec3(0.0f);
 	if (vDotn >= 0){
 		for (int i = 0; i < 1; i++){
-			Color += shadeModel(lights[i], camPosition, camNorm);
+			Color += shadeModel(lights[i], camPosition, normalize(camNorm)); //TODO addition is fucking up my colors >:(
 		}
 	}
 	else{
 		for (int i = 0; i < 1; i++){
-			Color += shadeModel(lights[i], camPosition, -camNorm);
+			Color += shadeModel(lights[i], camPosition, normalize(-camNorm));
 		}
 	}
 

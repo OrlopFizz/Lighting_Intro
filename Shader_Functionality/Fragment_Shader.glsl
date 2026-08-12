@@ -49,7 +49,7 @@ float linearize_depth(float depth){
 
 //regular color info from the vertex shader
 subroutine (FragmentFunctionType) vec4 regular_func(){
-	return vec4(Color, 1.0) * vec4(object_color, 1.0);
+	return vec4(Color, 1.0);// * vec4(object_color, 1.0);
 }
 
 //return a random color for every fragment 

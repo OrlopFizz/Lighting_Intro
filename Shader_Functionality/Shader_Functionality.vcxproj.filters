@@ -148,7 +148,7 @@
     <None Include="plane_vertex_shader.glsl">
       <Filter>Shader_Source</Filter>
     </None>
-    <None Include="Phong_Fragment_Shader.glsl">
+    <None Include="BlinnPhong_Fragment_Shader.glsl">
       <Filter>Shader_Source</Filter>
     </None>
   </ItemGroup>
@@ -164,7 +164,7 @@
     <Text Include="instructions.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Phong_Vertex_Shader.glsl">
+    <Text Include="BlinnPhong_Vertex_Shader.glsl">
       <Filter>Shader_Source</Filter>
     </Text>
   </ItemGroup>
